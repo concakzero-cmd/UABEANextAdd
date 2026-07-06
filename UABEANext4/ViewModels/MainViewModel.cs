@@ -848,4 +848,19 @@ public partial class MainViewModel : ViewModelBase
         var dialogService = Ioc.Default.GetRequiredService<IDialogService>();
         dialogService.Show(new SettingsViewModel());
     }
-}
+        // ====== Thêm mới: SelectedWorkspaceItem ======
+    private WorkspaceItem? _selectedWorkspaceItem;
+
+    public WorkspaceItem? SelectedWorkspaceItem
+    {
+        get => _selectedWorkspaceItem;
+        set
+        {
+            if (_selectedWorkspaceItem != value)
+            {
+                _selectedWorkspaceItem = value;
+                OnPropertyChanged(nameof(SelectedWorkspaceItem));
+            }
+        }
+    }
+}    
