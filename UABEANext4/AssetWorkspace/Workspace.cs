@@ -607,7 +607,30 @@ public partial class Workspace : ObservableObject
             i.Object is BundleFileInstance thisBunInst && thisBunInst == bunInst
         );
     }
-
+    public WorkspaceItem? AddFile(string filePath, int loadOrder = -1)
+    {
+        using FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read);
+        var item = LoadAnyFile(fs, loadOrder, filePath);
+        if (item != null)
+        {
+            RootItems.Add(item);
+            ItemLookup[item.Name] = item;
+        }
+        return item;
+    }
+    
+    // Xóa file khỏi Workspace
+    public void RemoveFile(WorkspaceItem item)
+    {
+        if (RootItems.Contains(item))
+        {
+            Close(item); // dùng hàm Close đã có sẵn để giải phóng
+            RootItems.Remove(item);
+            ItemLookup.Remove(item.Name);
+            UnsavedItems.Remove(item);
+            ModifiedItems.Remove(item);
+        }
+    }
     private WorkspaceItem? FindWorkspaceItemBfs(Func<WorkspaceItem, bool> predicate)
     {
         var searchQueue = new Queue<WorkspaceItem>(RootItems);
