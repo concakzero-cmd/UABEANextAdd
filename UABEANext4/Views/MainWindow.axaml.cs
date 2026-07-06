@@ -1,4 +1,4 @@
-﻿using Avalonia.Controls;
+using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Platform.Storage;
 using System.Linq;
@@ -50,6 +50,41 @@ public partial class MainWindow : Window
             if (fileNames is not null)
             {
                 await viewModel.OpenFiles(fileNames);
+            }
+        }
+    }
+
+    // ====== Thêm mới: sự kiện Add/Remove ======
+
+    private async void btnAdd_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+    {
+        if (DataContext is MainViewModel viewModel)
+        {
+            var storageProvider = this.StorageProvider;
+            var files = await storageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
+            {
+                AllowMultiple = false
+            });
+
+            if (files.Count > 0)
+            {
+                var localPath = files[0].TryGetLocalPath();
+                if (!string.IsNullOrEmpty(localPath))
+                {
+                    await viewModel.OpenFiles(new[] { localPath });
+                }
+            }
+        }
+    }
+
+    private void btnRemove_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+    {
+        if (DataContext is MainViewModel viewModel)
+        {
+            var selected = viewModel.SelectedWorkspaceItem;
+            if (selected != null)
+            {
+                viewModel.Workspace.RemoveFile(selected);
             }
         }
     }
