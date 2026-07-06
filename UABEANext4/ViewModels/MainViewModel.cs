@@ -848,7 +848,7 @@ public partial class MainViewModel : ViewModelBase
         var dialogService = Ioc.Default.GetRequiredService<IDialogService>();
         dialogService.Show(new SettingsViewModel());
     }
-        // ====== Thêm mới: SelectedWorkspaceItem ======
+   // ====== Thêm mới: SelectedWorkspaceItem và RemoveSelectedFile ======
     private WorkspaceItem? _selectedWorkspaceItem;
 
     public WorkspaceItem? SelectedWorkspaceItem
@@ -861,6 +861,16 @@ public partial class MainViewModel : ViewModelBase
                 _selectedWorkspaceItem = value;
                 OnPropertyChanged(nameof(SelectedWorkspaceItem));
             }
+        }
+    }
+
+    [RelayCommand]
+    private void RemoveSelectedFile()
+    {
+        if (SelectedWorkspaceItem != null)
+        {
+            Workspace.RemoveFile(SelectedWorkspaceItem);
+            SelectedWorkspaceItem = null;
         }
     }
 }    
